@@ -42,11 +42,12 @@ var mashinaSidebar = document.querySelector(".mashina-sidebar");
 var selectDiv = document.querySelector("#select");
 function markalar() {
     return __awaiter(this, void 0, void 0, function () {
-        var response, thead_1, tbody_1, error_1;
+        var response, thead_1, tbody_1, trh, th, plusBtn_1, error_1;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
+                    selectDiv.innerHTML = "";
                     mashinaSidebar.classList.remove("active");
                     markaSidebar.classList.add("active");
                     _a.label = 1;
@@ -59,7 +60,16 @@ function markalar() {
                     table.innerHTML = "";
                     thead_1 = document.createElement("thead");
                     tbody_1 = document.createElement("tbody");
-                    thead_1.innerHTML = " <tr>\n                  <th scope=\"col\">Mashina rasmi</th>\n                  <th scope=\"col\">Mashina nomi</th>\n                  <th scope=\"col\"> Sozlamalar</th>\n                </tr>";
+                    trh = document.createElement("tr");
+                    trh.innerHTML = "\n                  <th scope=\"col\">Mashina rasmi</th>\n                  <th scope=\"col\">Mashina nomi</th>\n                  <th scope=\"col\"> Sozlamalar</th>\n                ";
+                    th = document.createElement("th");
+                    th.setAttribute("scope", "col");
+                    plusBtn_1 = document.createElement("button");
+                    plusBtn_1.className = "btn";
+                    plusBtn_1.innerHTML = "<i class=\"fa-solid fa-plus\"></i>";
+                    th.appendChild(plusBtn_1);
+                    trh.appendChild(th);
+                    thead_1.appendChild(trh);
                     response.data.map(function (marka) {
                         var tr = document.createElement("tr");
                         tr.innerHTML = "\n                    <td style=\"height=75px\"> <img src=\"".concat(marka.img, "\" alt=\"\" width=\"80px\" > </td>\n                    <td style=\"height=75px\"> ").concat(marka.car, " </td>\n                    ");
@@ -102,44 +112,105 @@ function markalar() {
                         }); });
                         button1.setAttribute("data-bs-toggle", "modal");
                         button1.setAttribute("data-bs-target", "#editMarka");
+                        // edit
                         button1.addEventListener("click", function () { return __awaiter(_this, void 0, void 0, function () {
                             var imgEdit, nomiEdit, footerMarkaEdit, orqagaMarkaEdit, saveinfoMarkaEdit;
+                            var _this = this;
                             return __generator(this, function (_a) {
                                 console.log("test edit marka ");
-                                try {
-                                    console.log("tetstestetstetd");
-                                    imgEdit = document.querySelector("#img");
-                                    nomiEdit = document.querySelector("#nomi");
-                                    imgEdit.value = marka.img;
-                                    nomiEdit.value = marka.car;
-                                    footerMarkaEdit = document.querySelector("#footer-edit-marka");
-                                    orqagaMarkaEdit = document.createElement("button");
-                                    orqagaMarkaEdit.innerHTML = "Orqaga";
-                                    orqagaMarkaEdit.className = "btn btn-secondary";
-                                    orqagaMarkaEdit.setAttribute("data-bs-dismiss", "modal");
-                                    saveinfoMarkaEdit = document.createElement("button");
-                                    saveinfoMarkaEdit.innerHTML = "Saqlash";
-                                    saveinfoMarkaEdit.className = "btn btn-primary";
-                                    footerMarkaEdit.innerHTML = "";
-                                    footerMarkaEdit.appendChild(orqagaMarkaEdit);
-                                    footerMarkaEdit.appendChild(saveinfoMarkaEdit);
-                                    saveinfoMarkaEdit.addEventListener("click", function () {
-                                        console.log("edit marka save");
+                                imgEdit = document.querySelector("#img");
+                                nomiEdit = document.querySelector("#nomi");
+                                imgEdit.value = marka.img;
+                                nomiEdit.value = marka.car;
+                                footerMarkaEdit = document.querySelector("#footer-edit-marka");
+                                orqagaMarkaEdit = document.createElement("button");
+                                orqagaMarkaEdit.innerHTML = "Orqaga";
+                                orqagaMarkaEdit.className = "btn btn-secondary";
+                                orqagaMarkaEdit.setAttribute("data-bs-dismiss", "modal");
+                                saveinfoMarkaEdit = document.createElement("button");
+                                saveinfoMarkaEdit.innerHTML = "Saqlash";
+                                saveinfoMarkaEdit.className = "btn btn-primary";
+                                footerMarkaEdit.innerHTML = "";
+                                footerMarkaEdit.appendChild(orqagaMarkaEdit);
+                                footerMarkaEdit.appendChild(saveinfoMarkaEdit);
+                                saveinfoMarkaEdit.addEventListener("click", function () { return __awaiter(_this, void 0, void 0, function () {
+                                    var error_3;
+                                    return __generator(this, function (_a) {
+                                        switch (_a.label) {
+                                            case 0:
+                                                console.log("edit marka save");
+                                                _a.label = 1;
+                                            case 1:
+                                                _a.trys.push([1, 3, , 4]);
+                                                //@ts-ignore
+                                                return [4 /*yield*/, axios.patch("https://8bb1c4695ec175c7.mokky.dev/markalar/".concat(marka.id), {
+                                                        img: imgEdit.value,
+                                                        car: nomiEdit.value,
+                                                    })];
+                                            case 2:
+                                                //@ts-ignore
+                                                _a.sent();
+                                                console.log("test2");
+                                                markalar();
+                                                return [3 /*break*/, 4];
+                                            case 3:
+                                                error_3 = _a.sent();
+                                                console.log("ozgartirish kiritilmadi", error_3);
+                                                return [3 /*break*/, 4];
+                                            case 4: return [2 /*return*/];
+                                        }
                                     });
-                                    //@ts-ignore
-                                    axios.patch("https://8bb1c4695ec175c7.mokky.dev/markalar/".concat(marka.id), {
-                                        img: imgEdit.value,
-                                        car: nomiEdit.value,
-                                    });
-                                    console.log("test2");
-                                    markalar();
-                                }
-                                catch (error) {
-                                    console.log("ozgartirish kiritilmadi", error);
-                                }
+                                }); });
                                 return [2 /*return*/];
                             });
                         }); });
+                        // add
+                        plusBtn_1.setAttribute("data-bs-toggle", "modal");
+                        plusBtn_1.setAttribute("data-bs-target", "#addMarka");
+                        plusBtn_1.addEventListener("click", function () {
+                            var foot = document.querySelector("#footer-add-marka");
+                            var orqagaAdd = document.createElement("button");
+                            orqagaAdd.innerHTML = "orqaga";
+                            orqagaAdd.className = "btn btn-secondary";
+                            orqagaAdd.setAttribute("data-bs-dismiss", "modal");
+                            var saveAdd = document.createElement("button");
+                            saveAdd.innerHTML = "Marka qo'shish";
+                            saveAdd.className = "btn btn-primary";
+                            foot.innerHTML = "";
+                            foot.appendChild(orqagaAdd);
+                            foot.appendChild(saveAdd);
+                            saveAdd.addEventListener("click", function () { return __awaiter(_this, void 0, void 0, function () {
+                                var imgAdd, carAdd, error_4;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            console.log("marka add ");
+                                            _a.label = 1;
+                                        case 1:
+                                            _a.trys.push([1, 3, , 4]);
+                                            imgAdd = document.getElementById("imgmarka");
+                                            carAdd = document.getElementById("nomimarka");
+                                            //@ts-ignore
+                                            return [4 /*yield*/, axios.post("https://8bb1c4695ec175c7.mokky.dev/markalar", {
+                                                    img: imgAdd.value,
+                                                    car: carAdd.value,
+                                                })];
+                                        case 2:
+                                            //@ts-ignore
+                                            _a.sent();
+                                            imgAdd.value = "";
+                                            carAdd.value = "";
+                                            markalar();
+                                            return [3 /*break*/, 4];
+                                        case 3:
+                                            error_4 = _a.sent();
+                                            console.log("ozgartirish kiritilmadi", error_4);
+                                            return [3 /*break*/, 4];
+                                        case 4: return [2 /*return*/];
+                                    }
+                                });
+                            }); });
+                        });
                     });
                     return [3 /*break*/, 4];
                 case 3:
@@ -153,24 +224,13 @@ function markalar() {
 }
 function mashinalar() {
     return __awaiter(this, void 0, void 0, function () {
-        var foot, orqaga, saveinfoadd, select, option1, response, button, xaridor, rang, sana, markaID, response_1, thead_2, tbody_2, error_3;
+        var select, option1, response, button, response_1, thead_2, tbody_2, error_5;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     markaSidebar.classList.remove("active");
                     mashinaSidebar.classList.add("active");
-                    foot = document.querySelector("#footer-add-modal");
-                    orqaga = document.createElement("button");
-                    orqaga.innerHTML = "orqaga";
-                    orqaga.className = "btn btn-secondary";
-                    orqaga.setAttribute("data-bs-dismiss", "modal");
-                    saveinfoadd = document.createElement("button");
-                    saveinfoadd.innerHTML = "mashinalar qoshish";
-                    saveinfoadd.className = "btn btn-primary";
-                    foot.innerHTML = "";
-                    foot.appendChild(orqaga);
-                    foot.appendChild(saveinfoadd);
                     select = document.createElement("select");
                     select.className = "form-select";
                     option1 = document.createElement("option");
@@ -195,7 +255,7 @@ function mashinalar() {
                     selectDiv.appendChild(select);
                     selectDiv.appendChild(button);
                     select.addEventListener("change", function () { return __awaiter(_this, void 0, void 0, function () {
-                        var response_2, thead_3, tbody_3, error_4;
+                        var response_2, thead_3, tbody_3, error_6;
                         var _this = this;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
@@ -231,7 +291,7 @@ function mashinalar() {
                                         tbody_3.appendChild(tr);
                                         table.appendChild(tbody_3);
                                         button2.addEventListener("click", function () { return __awaiter(_this, void 0, void 0, function () {
-                                            var error_5;
+                                            var error_7;
                                             return __generator(this, function (_a) {
                                                 switch (_a.label) {
                                                     case 0:
@@ -245,7 +305,7 @@ function mashinalar() {
                                                         mashinalar();
                                                         return [3 /*break*/, 4];
                                                     case 3:
-                                                        error_5 = _a.sent();
+                                                        error_7 = _a.sent();
                                                         return [3 /*break*/, 4];
                                                     case 4: return [2 /*return*/];
                                                 }
@@ -255,17 +315,13 @@ function mashinalar() {
                                     _a.label = 3;
                                 case 3: return [3 /*break*/, 5];
                                 case 4:
-                                    error_4 = _a.sent();
-                                    console.log(error_4);
+                                    error_6 = _a.sent();
+                                    console.log(error_6);
                                     return [3 /*break*/, 5];
                                 case 5: return [2 /*return*/];
                             }
                         });
                     }); });
-                    xaridor = document.getElementById("customer");
-                    rang = document.getElementById("colour");
-                    sana = document.getElementById("date");
-                    markaID = document.getElementById("markaID");
                     _a.label = 2;
                 case 2:
                     _a.trys.push([2, 4, , 5]);
@@ -276,7 +332,7 @@ function mashinalar() {
                     table.innerHTML = "";
                     thead_2 = document.createElement("thead");
                     tbody_2 = document.createElement("tbody");
-                    thead_2.innerHTML = "  <tr>\n                    <th scope=\"col\">\u2116</th>\n                    <th scope=\"col\">Xaridor ismi</th>\n                    <th scope=\"col\">Mashina markasi/ Marka id</th>\n                    <th scope=\"col\">Mashina rangi</th>\n                    <th scope=\"col\">Buyurtma sanasi</th>\n                    <th scope=\"col\">Sozlamalar</th>\n                  </tr>";
+                    thead_2.innerHTML = "  <tr>\n                    <th scope=\"col\">\u2116</th>\n                    <th scope=\"col\">Xaridor ismi</th>\n                    <th scope=\"col\">Marka id</th>\n                    <th scope=\"col\">Mashina rangi</th>\n                    <th scope=\"col\">Buyurtma sanasi</th>\n                    <th scope=\"col\">Sozlamalar</th>\n                  </tr>";
                     response_1.data.map(function (mashina, index) {
                         var tr = document.createElement("tr");
                         var td = document.createElement("td");
@@ -295,7 +351,7 @@ function mashinalar() {
                         tbody_2.appendChild(tr);
                         table.appendChild(tbody_2);
                         button2.addEventListener("click", function () { return __awaiter(_this, void 0, void 0, function () {
-                            var error_6;
+                            var error_8;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
                                     case 0:
@@ -309,94 +365,119 @@ function mashinalar() {
                                         mashinalar();
                                         return [3 /*break*/, 4];
                                     case 3:
-                                        error_6 = _a.sent();
+                                        error_8 = _a.sent();
                                         return [3 /*break*/, 4];
                                     case 4: return [2 /*return*/];
                                 }
                             });
                         }); });
+                        // edit
+                        button1.setAttribute("data-bs-toggle", "modal");
+                        button1.setAttribute("data-bs-target", "#exampleModaledit");
                         button1.addEventListener("click", function () {
-                            console.log("button plus add");
-                            if (xaridor.value.length > 0 &&
-                                rang.value.length > 0 &&
-                                sana.value.length > 0 &&
-                                markaID.value.length > 0) {
-                                //@ts-ignore
-                                axios
-                                    .post("https://8bb1c4695ec175c7.mokky.dev/mashina", {
-                                    customer: xaridor.value,
-                                    colour: rang.value,
-                                    date: sana.value,
-                                    markaId: markaID.value,
-                                })
-                                    .then(function (res) {
-                                    xaridor.value = "";
-                                    rang.value = "";
-                                    sana.value = "";
-                                    markaID.value = "";
-                                    mashinalar();
-                                })
-                                    .catch(function (error) {
-                                    console.log(error);
+                            var xaridor = document.getElementById("customerEdit");
+                            var rang = document.getElementById("colourEdit");
+                            var sana = document.getElementById("dateEdit");
+                            var markaid = document.querySelector("#markaEdit");
+                            console.log("button edit");
+                            var footerMashinaEdit = document.querySelector("#footer-modaledit");
+                            var orqagaMashinaEdit = document.createElement("button");
+                            orqagaMashinaEdit.innerHTML = "Orqaga";
+                            orqagaMashinaEdit.className = "btn btn-secondary";
+                            orqagaMashinaEdit.setAttribute("data-bs-dismiss", "modal");
+                            var saveinfoMashinaEdit = document.createElement("button");
+                            // console.log("markaid0", markaid.value);
+                            saveinfoMashinaEdit.innerHTML = "Saqlash";
+                            saveinfoMashinaEdit.className = "btn btn-primary";
+                            footerMashinaEdit.innerHTML = "";
+                            footerMashinaEdit.appendChild(orqagaMashinaEdit);
+                            footerMashinaEdit.appendChild(saveinfoMashinaEdit);
+                            xaridor.value = mashina.customer;
+                            rang.value = mashina.colour;
+                            sana.value = mashina.date;
+                            //@ts-ignore
+                            markaid.value = mashina.markaId;
+                            saveinfoMashinaEdit.addEventListener("click", function () { return __awaiter(_this, void 0, void 0, function () {
+                                var error_9;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            _a.trys.push([0, 2, , 3]);
+                                            //@ts-ignore
+                                            return [4 /*yield*/, axios.patch("https://8bb1c4695ec175c7.mokky.dev/mashina/".concat(mashina.id), {
+                                                    customer: xaridor.value,
+                                                    colour: rang.value,
+                                                    date: sana.value,
+                                                    markaId: markaid.value,
+                                                })];
+                                        case 1:
+                                            //@ts-ignore
+                                            _a.sent();
+                                            mashinalar();
+                                            return [3 /*break*/, 3];
+                                        case 2:
+                                            error_9 = _a.sent();
+                                            console.log(error_9);
+                                            return [3 /*break*/, 3];
+                                        case 3: return [2 /*return*/];
+                                    }
                                 });
-                            }
-                            else {
-                                console.log("ma'lumotlarni to'ldiring");
-                            }
+                            }); });
                         });
-                        saveinfoadd.addEventListener("click", function () { return __awaiter(_this, void 0, void 0, function () {
-                            var xaridor_1, rang_1, sana_1, footedit, orqa, editinfoadd;
-                            return __generator(this, function (_a) {
-                                console.log("mashina edit ");
-                                try {
-                                    xaridor_1 = document.getElementById("customer");
-                                    rang_1 = document.getElementById("colour");
-                                    sana_1 = document.getElementById("date");
-                                    xaridor_1.value = mashina.customer;
-                                    rang_1.value = mashina.colour;
-                                    sana_1.value = mashina.date;
-                                    footedit = document.querySelector("#footer-add-modaledit");
-                                    orqa = document.createElement("button");
-                                    orqa.innerHTML = "Orqaga";
-                                    orqa.className = "btn btn-secondary";
-                                    orqa.setAttribute("data-bs-dismiss", "modal");
-                                    editinfoadd = document.createElement("button");
-                                    editinfoadd.innerHTML = "Mashinalar qoshish";
-                                    editinfoadd.className = "btn btn-primary";
-                                    footedit.innerHTML = "";
-                                    footedit.appendChild(orqa);
-                                    footedit.appendChild(editinfoadd);
-                                    editinfoadd.addEventListener("click", function () {
-                                        console.log("test edit button save");
-                                        //@ts-ignore
-                                        axios.patch("https://8bb1c4695ec175c7.mokky.dev/mashina/".concat(mashina.id), {
-                                            customer: xaridor_1.value,
-                                            date: sana_1.value,
-                                            colour: rang_1.value,
-                                        });
-                                        mashinalar();
-                                    });
-                                    // //@ts-ignore
-                                    // Toastify({
-                                    //   text: "edit qilishda xatolik mavjud",
-                                    //   duration: 2000,
-                                    //   style: {
-                                    //     background: "linear-gradient(to right, #ff5f6d, #ffc371)",
-                                    //     borderRadius: "10px",
-                                    //   },
-                                    // }).showToast();
-                                }
-                                catch (error) {
-                                    console.log("ozgartirish kiritilmadi", error);
-                                }
-                                return [2 /*return*/];
-                            });
-                        }); });
+                        // add
+                        button.setAttribute("data-bs-toggle", "modal");
+                        button.setAttribute("data-bs-target", "#exampleModal");
+                        button.addEventListener("click", function () {
+                            var foot = document.querySelector("#footer-add-modal");
+                            var orqagaadd = document.createElement("button");
+                            orqagaadd.innerHTML = "orqaga";
+                            orqagaadd.className = "btn btn-secondary";
+                            orqagaadd.setAttribute("data-bs-dismiss", "modal");
+                            var saveadd = document.createElement("button");
+                            saveadd.innerHTML = "mashinalar qoshish";
+                            saveadd.className = "btn btn-primary";
+                            foot.innerHTML = "";
+                            foot.appendChild(orqagaadd);
+                            foot.appendChild(saveadd);
+                            saveadd.addEventListener("click", function () { return __awaiter(_this, void 0, void 0, function () {
+                                var xaridoradd, rangadd, sanaadd, markaIDadd, error_10;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            console.log("mashina add ");
+                                            _a.label = 1;
+                                        case 1:
+                                            _a.trys.push([1, 3, , 4]);
+                                            xaridoradd = document.getElementById("customer");
+                                            rangadd = document.getElementById("colour");
+                                            sanaadd = document.getElementById("date");
+                                            markaIDadd = document.getElementById("markaID");
+                                            //@ts-ignore
+                                            return [4 /*yield*/, axios.post("https://8bb1c4695ec175c7.mokky.dev/mashina", {
+                                                    customer: xaridoradd.value,
+                                                    date: sanaadd.value,
+                                                    colour: rangadd.value,
+                                                    markaId: markaIDadd.value,
+                                                })];
+                                        case 2:
+                                            //@ts-ignore
+                                            _a.sent();
+                                            mashinalar();
+                                            return [3 /*break*/, 4];
+                                        case 3:
+                                            error_10 = _a.sent();
+                                            console.log("ozgartirish kiritilmadi", error_10);
+                                            return [3 /*break*/, 4];
+                                        case 4: return [2 /*return*/];
+                                    }
+                                });
+                            }); });
+                        });
                     });
                     return [3 /*break*/, 5];
                 case 4:
-                    error_3 = _a.sent();
-                    console.log(error_3);
+                    error_5 = _a.sent();
+                    console.log(error_5);
                     return [3 /*break*/, 5];
                 case 5: return [2 /*return*/];
             }
@@ -405,7 +486,7 @@ function mashinalar() {
 }
 function deleteMarka(id) {
     return __awaiter(this, void 0, void 0, function () {
-        var error_7;
+        var error_11;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -421,8 +502,8 @@ function deleteMarka(id) {
                     markalar();
                     return [3 /*break*/, 4];
                 case 3:
-                    error_7 = _a.sent();
-                    console.error(error_7);
+                    error_11 = _a.sent();
+                    console.error(error_11);
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
             }
@@ -431,7 +512,7 @@ function deleteMarka(id) {
 }
 function deleteMashina(id) {
     return __awaiter(this, void 0, void 0, function () {
-        var error_8;
+        var error_12;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -447,8 +528,8 @@ function deleteMashina(id) {
                     mashinalar();
                     return [3 /*break*/, 4];
                 case 3:
-                    error_8 = _a.sent();
-                    console.error(error_8);
+                    error_12 = _a.sent();
+                    console.error(error_12);
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
             }

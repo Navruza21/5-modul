@@ -20,6 +20,7 @@ type Marka = {
   car: string;
 };
 async function markalar() {
+  selectDiv.innerHTML = "";
   mashinaSidebar.classList.remove("active");
   markaSidebar.classList.add("active");
   try {
@@ -31,12 +32,20 @@ async function markalar() {
     table.innerHTML = "";
     let thead = document.createElement("thead") as HTMLTableSectionElement;
     let tbody = document.createElement("tbody") as HTMLTableSectionElement;
-
-    thead.innerHTML = ` <tr>
+    let trh = document.createElement("tr");
+    trh.innerHTML = `
                   <th scope="col">Mashina rasmi</th>
                   <th scope="col">Mashina nomi</th>
                   <th scope="col"> Sozlamalar</th>
-                </tr>`;
+                `;
+    let th = document.createElement("th");
+    th.setAttribute("scope", "col");
+    let plusBtn = document.createElement("button");
+    plusBtn.className = "btn";
+    plusBtn.innerHTML = `<i class="fa-solid fa-plus"></i>`;
+    th.appendChild(plusBtn);
+    trh.appendChild(th);
+    thead.appendChild(trh);
     response.data.map((marka: Marka) => {
       let tr = document.createElement("tr");
       tr.innerHTML = `
@@ -70,51 +79,90 @@ async function markalar() {
 
       button1.setAttribute("data-bs-toggle", "modal");
       button1.setAttribute("data-bs-target", "#editMarka");
-
+      // edit
       button1.addEventListener("click", async () => {
         console.log("test edit marka ");
-        try {
-          console.log("tetstestetstetd");
+        let imgEdit = document.querySelector("#img") as HTMLInputElement;
+        let nomiEdit = document.querySelector("#nomi") as HTMLInputElement;
+        imgEdit.value = marka.img;
+        nomiEdit.value = marka.car;
 
-          let imgEdit = document.querySelector("#img") as HTMLInputElement;
-          let nomiEdit = document.querySelector("#nomi") as HTMLInputElement;
-          imgEdit.value = marka.img;
-          nomiEdit.value = marka.car;
+        let footerMarkaEdit = document.querySelector(
+          "#footer-edit-marka"
+        ) as HTMLDivElement;
+        let orqagaMarkaEdit = document.createElement(
+          "button"
+        ) as HTMLButtonElement;
+        orqagaMarkaEdit.innerHTML = "Orqaga";
+        orqagaMarkaEdit.className = "btn btn-secondary";
+        orqagaMarkaEdit.setAttribute("data-bs-dismiss", "modal");
+        let saveinfoMarkaEdit = document.createElement(
+          "button"
+        ) as HTMLButtonElement;
+        saveinfoMarkaEdit.innerHTML = "Saqlash";
+        saveinfoMarkaEdit.className = "btn btn-primary";
+        footerMarkaEdit.innerHTML = "";
+        footerMarkaEdit.appendChild(orqagaMarkaEdit);
+        footerMarkaEdit.appendChild(saveinfoMarkaEdit);
+        saveinfoMarkaEdit.addEventListener("click", async () => {
+          console.log("edit marka save");
 
-          let footerMarkaEdit = document.querySelector(
-            "#footer-edit-marka"
-          ) as HTMLDivElement;
-          let orqagaMarkaEdit = document.createElement(
-            "button"
-          ) as HTMLButtonElement;
-          orqagaMarkaEdit.innerHTML = "Orqaga";
-          orqagaMarkaEdit.className = "btn btn-secondary";
-          orqagaMarkaEdit.setAttribute("data-bs-dismiss", "modal");
-          let saveinfoMarkaEdit = document.createElement(
-            "button"
-          ) as HTMLButtonElement;
-          saveinfoMarkaEdit.innerHTML = "Saqlash";
-          saveinfoMarkaEdit.className = "btn btn-primary";
-          footerMarkaEdit.innerHTML = "";
-          footerMarkaEdit.appendChild(orqagaMarkaEdit);
-          footerMarkaEdit.appendChild(saveinfoMarkaEdit);
+          try {
+            //@ts-ignore
+            await axios.patch(
+              `https://8bb1c4695ec175c7.mokky.dev/markalar/${marka.id}`,
+              {
+                img: imgEdit.value,
+                car: nomiEdit.value,
+              }
+            );
+            console.log("test2");
+            markalar();
+          } catch (error) {
+            console.log("ozgartirish kiritilmadi", error);
+          }
+        });
+      });
 
-          saveinfoMarkaEdit.addEventListener("click", () => {
-            console.log("edit marka save");
-          });
-          //@ts-ignore
-          axios.patch(
-            `https://8bb1c4695ec175c7.mokky.dev/markalar/${marka.id}`,
-            {
-              img: imgEdit.value,
-              car: nomiEdit.value,
-            }
-          );
-          console.log("test2");
-          markalar();
-        } catch (error) {
-          console.log("ozgartirish kiritilmadi", error);
-        }
+      // add
+      plusBtn.setAttribute("data-bs-toggle", "modal");
+      plusBtn.setAttribute("data-bs-target", "#addMarka");
+      plusBtn.addEventListener("click", () => {
+        let foot = document.querySelector(
+          "#footer-add-marka"
+        ) as HTMLDivElement;
+        let orqagaAdd = document.createElement("button") as HTMLButtonElement;
+        orqagaAdd.innerHTML = "orqaga";
+        orqagaAdd.className = "btn btn-secondary";
+        orqagaAdd.setAttribute("data-bs-dismiss", "modal");
+        let saveAdd = document.createElement("button") as HTMLButtonElement;
+        saveAdd.innerHTML = "Marka qo'shish";
+        saveAdd.className = "btn btn-primary";
+        foot.innerHTML = "";
+        foot.appendChild(orqagaAdd);
+        foot.appendChild(saveAdd);
+
+        saveAdd.addEventListener("click", async () => {
+          console.log("marka add ");
+          try {
+            const imgAdd = document.getElementById(
+              "imgmarka"
+            ) as HTMLInputElement;
+            const carAdd = document.getElementById(
+              "nomimarka"
+            ) as HTMLInputElement;
+            //@ts-ignore
+            await axios.post(`https://8bb1c4695ec175c7.mokky.dev/markalar`, {
+              img: imgAdd.value,
+              car: carAdd.value,
+            });
+            imgAdd.value = "";
+            carAdd.value = "";
+            markalar();
+          } catch (error) {
+            console.log("ozgartirish kiritilmadi", error);
+          }
+        });
       });
     });
   } catch (error) {
@@ -125,17 +173,6 @@ async function markalar() {
 async function mashinalar() {
   markaSidebar.classList.remove("active");
   mashinaSidebar.classList.add("active");
-  let foot = document.querySelector("#footer-add-modal") as HTMLDivElement;
-  let orqaga = document.createElement("button") as HTMLButtonElement;
-  orqaga.innerHTML = "orqaga";
-  orqaga.className = "btn btn-secondary";
-  orqaga.setAttribute("data-bs-dismiss", "modal");
-  let saveinfoadd = document.createElement("button") as HTMLButtonElement;
-  saveinfoadd.innerHTML = "mashinalar qoshish";
-  saveinfoadd.className = "btn btn-primary";
-  foot.innerHTML = "";
-  foot.appendChild(orqaga);
-  foot.appendChild(saveinfoadd);
 
   let select = document.createElement("select");
   select.className = "form-select";
@@ -228,11 +265,6 @@ async function mashinalar() {
     }
   });
 
-  const xaridor = document.getElementById("customer") as HTMLInputElement;
-  const rang = document.getElementById("colour") as HTMLInputElement;
-  const sana = document.getElementById("date") as HTMLInputElement;
-  const markaID = document.getElementById("markaID") as HTMLInputElement;
-
   try {
     //@ts-ignore
     const response = await axios.get(
@@ -246,7 +278,7 @@ async function mashinalar() {
     thead.innerHTML = `  <tr>
                     <th scope="col">№</th>
                     <th scope="col">Xaridor ismi</th>
-                    <th scope="col">Mashina markasi/ Marka id</th>
+                    <th scope="col">Marka id</th>
                     <th scope="col">Mashina rangi</th>
                     <th scope="col">Buyurtma sanasi</th>
                     <th scope="col">Sozlamalar</th>
@@ -283,91 +315,114 @@ async function mashinalar() {
           mashinalar();
         } catch (error) {}
       });
+      // edit
+      button1.setAttribute("data-bs-toggle", "modal");
+      button1.setAttribute("data-bs-target", "#exampleModaledit");
       button1.addEventListener("click", () => {
-        console.log("button plus add");
-        if (
-          xaridor.value.length > 0 &&
-          rang.value.length > 0 &&
-          sana.value.length > 0 &&
-          markaID.value.length > 0
-        ) {
-          //@ts-ignore
-          axios
-            .post("https://8bb1c4695ec175c7.mokky.dev/mashina", {
-              customer: xaridor.value,
-              colour: rang.value,
-              date: sana.value,
-              markaId: markaID.value,
-            })
-            .then((res: { data: Mashina }) => {
-              xaridor.value = "";
-              rang.value = "";
-              sana.value = "";
-              markaID.value = "";
-              mashinalar();
-            })
-            .catch((error: Error) => {
-              console.log(error);
-            });
-        } else {
-          console.log("ma'lumotlarni to'ldiring");
-        }
-      });
+        const xaridor = document.getElementById(
+          "customerEdit"
+        ) as HTMLInputElement;
+        const rang = document.getElementById("colourEdit") as HTMLInputElement;
+        const sana = document.getElementById("dateEdit") as HTMLInputElement;
+        const markaid = document.querySelector(
+          "#markaEdit"
+        ) as HTMLInputElement;
+        console.log("button edit");
 
-      saveinfoadd.addEventListener("click", async () => {
-        console.log("mashina edit ");
-        try {
-          const xaridor = document.getElementById(
-            "customer"
-          ) as HTMLInputElement;
-          const rang = document.getElementById("colour") as HTMLInputElement;
-          const sana = document.getElementById("date") as HTMLInputElement;
-
-          xaridor.value = mashina.customer;
-          rang.value = mashina.colour;
-          sana.value = mashina.date;
-
-          let footedit = document.querySelector(
-            "#footer-add-modaledit"
-          ) as HTMLDivElement;
-
-          let orqa = document.createElement("button") as HTMLButtonElement;
-          orqa.innerHTML = "Orqaga";
-          orqa.className = "btn btn-secondary";
-          orqa.setAttribute("data-bs-dismiss", "modal");
-          let editinfoadd = document.createElement(
-            "button"
-          ) as HTMLButtonElement;
-          editinfoadd.innerHTML = "Mashinalar qoshish";
-          editinfoadd.className = "btn btn-primary";
-          footedit.innerHTML = "";
-          footedit.appendChild(orqa);
-          footedit.appendChild(editinfoadd);
-          editinfoadd.addEventListener("click", () => {
-            console.log("test edit button save");
+        let footerMashinaEdit = document.querySelector(
+          "#footer-modaledit"
+        ) as HTMLDivElement;
+        let orqagaMashinaEdit = document.createElement(
+          "button"
+        ) as HTMLButtonElement;
+        orqagaMashinaEdit.innerHTML = "Orqaga";
+        orqagaMashinaEdit.className = "btn btn-secondary";
+        orqagaMashinaEdit.setAttribute("data-bs-dismiss", "modal");
+        let saveinfoMashinaEdit = document.createElement(
+          "button"
+        ) as HTMLButtonElement;
+        // console.log("markaid0", markaid.value);
+        saveinfoMashinaEdit.innerHTML = "Saqlash";
+        saveinfoMashinaEdit.className = "btn btn-primary";
+        footerMashinaEdit.innerHTML = "";
+        footerMashinaEdit.appendChild(orqagaMashinaEdit);
+        footerMashinaEdit.appendChild(saveinfoMashinaEdit);
+        xaridor.value = mashina.customer;
+        rang.value = mashina.colour;
+        sana.value = mashina.date;
+        //@ts-ignore
+        markaid.value = mashina.markaId;
+        saveinfoMashinaEdit.addEventListener("click", async () => {
+          try {
             //@ts-ignore
-            axios.patch(
+            await axios.patch(
               `https://8bb1c4695ec175c7.mokky.dev/mashina/${mashina.id}`,
               {
                 customer: xaridor.value,
-                date: sana.value,
                 colour: rang.value,
+                date: sana.value,
+                markaId: markaid.value,
               }
             );
             mashinalar();
-          });
-          // //@ts-ignore
-          // Toastify({
-          //   text: "edit qilishda xatolik mavjud",
-          //   duration: 2000,
-          //   style: {
-          //     background: "linear-gradient(to right, #ff5f6d, #ffc371)",
-          //     borderRadius: "10px",
-          //   },
-          // }).showToast();
-        } catch (error) {
-          console.log("ozgartirish kiritilmadi", error);
-        }
+          } catch (error) {
+            console.log(error);
+          }
+        });
+      });
+
+      // add
+      button.setAttribute("data-bs-toggle", "modal");
+      button.setAttribute("data-bs-target", "#exampleModal");
+      button.addEventListener("click", () => {
+        let foot = document.querySelector(
+          "#footer-add-modal"
+        ) as HTMLDivElement;
+        let orqagaadd = document.createElement("button") as HTMLButtonElement;
+        orqagaadd.innerHTML = "orqaga";
+        orqagaadd.className = "btn btn-secondary";
+        orqagaadd.setAttribute("data-bs-dismiss", "modal");
+        let saveadd = document.createElement("button") as HTMLButtonElement;
+        saveadd.innerHTML = "mashinalar qoshish";
+        saveadd.className = "btn btn-primary";
+        foot.innerHTML = "";
+        foot.appendChild(orqagaadd);
+        foot.appendChild(saveadd);
+
+        saveadd.addEventListener("click", async () => {
+          console.log("mashina add ");
+          try {
+            const xaridoradd = document.getElementById(
+              "customer"
+            ) as HTMLInputElement;
+            const rangadd = document.getElementById(
+              "colour"
+            ) as HTMLInputElement;
+            const sanaadd = document.getElementById("date") as HTMLInputElement;
+            const markaIDadd = document.getElementById(
+              "markaID"
+            ) as HTMLInputElement;
+            //@ts-ignore
+            await axios.post(`https://8bb1c4695ec175c7.mokky.dev/mashina`, {
+              customer: xaridoradd.value,
+              date: sanaadd.value,
+              colour: rangadd.value,
+              markaId: markaIDadd.value,
+            });
+            mashinalar();
+            // //@ts-ignore
+            // Toastify({
+            //   text: "edit qilishda xatolik mavjud",
+            //   duration: 2000,
+            //   style: {
+            //     background: "linear-gradient(to right, #ff5f6d, #ffc371)",
+            //     borderRadius: "10px",
+            //   },
+            // }).showToast();
+          } catch (error) {
+            console.log("ozgartirish kiritilmadi", error);
+          }
+        });
       });
     });
   } catch (error) {

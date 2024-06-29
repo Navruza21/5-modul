@@ -136,6 +136,49 @@
       </div>
     </div>
 
+    <!-- add marka -->
+    <div
+      class="modal fade"
+      id="addMarka"
+      tabindex="-1"
+      aria-labelledby="addMarkaLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="addMarkaLabel">Tahrirlash</h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="d-flex flex-column">
+              <label for="img">Rasm URL</label>
+              <input type="text" id="imgmarka" />
+            </div>
+            <div class="d-flex flex-column">
+              <label for="nomi">Mashina nomi</label>
+              <input type="text" id="nomimarka" />
+            </div>
+          </div>
+          <div class="modal-footer" id="footer-add-marka">
+            <!-- <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+        >
+          Orqaga
+        </button>
+        <button type="button" class="btn btn-primary">Saqlash</button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- edit marka -->
     <div
       class="modal fade"
@@ -157,7 +200,7 @@
           </div>
           <div class="modal-body">
             <div class="d-flex flex-column">
-              <label for="img">RasM URL</label>
+              <label for="img">Rasm URL</label>
               <input type="text" id="img" />
             </div>
             <div class="d-flex flex-column">
@@ -214,8 +257,8 @@
               <input type="text" id="date" />
             </div>
             <div class="d-flex flex-column">
-              <label for="date">Marka id</label>
-              <input type="text" id="markaID" />
+              <label for="markaID">Marka id</label>
+              <input type="number" id="markaID" />
             </div>
           </div>
           <div class="modal-footer" id="footer-add-modal">
@@ -269,9 +312,13 @@
                 <label for="date">Buyurtma sanasi</label>
                 <input type="text" id="dateEdit" />
               </div>
+              <div class="d-flex flex-column">
+                <label for="markaEdit">Marka id</label>
+                <input type="number" id="markaEdit" />
+              </div>
             </div>
           </div>
-          <div class="modal-footer" id="footer-add-modaledit">
+          <div class="modal-footer" id="footer-modaledit">
             <!-- <button
                type="button"
                class="btn btn-secondary"
@@ -280,7 +327,7 @@
                Orqaga
              </button> -->
             <!-- <button type="button" class="btn btn-primary">
-               Savollar qo'shish
+               tahrirni saqlash
              </button> -->
           </div>
         </div>
